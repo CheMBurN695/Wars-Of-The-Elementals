@@ -19,11 +19,13 @@ public class PlayerControlBase : MonoBehaviour
     [SerializeField] public Transform groundedCheck;
     [SerializeField] float raycastLength = 0.1f;
     public LayerMask groundMasks;
+    SpriteRenderer sr;
 
     private void Awake()
     {
-        InitExtentPositions();
+        
         rb = GetComponent<Rigidbody2D>();
+        sr = GetComponent<SpriteRenderer>();
     }
 
     private void InitExtentPositions()
@@ -42,9 +44,22 @@ public class PlayerControlBase : MonoBehaviour
         leftCorner = new Vector2(leftEdge.x, playerGroundPos.y);
     }
 
-    
+    private void Update()
+    {
+        if (rb.velocity.x > 0.1f)
+        {
+            sr.flipX = true;
+        }
+        else if (rb.velocity.x < -0.1f)
+        {
+            sr.flipX = false;
+        }
+    }
+
+
     private void FixedUpdate()
     {
+        InitExtentPositions();
         FireCasts();
         if (CheckIsGrounded()) { isGrounded = true; } else { isGrounded = false; }
     }
